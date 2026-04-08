@@ -1,62 +1,68 @@
-const chatBox = document.getElementById("chatBox");
+document.addEventListener("DOMContentLoaded", () => {
+    const chatBox = document.getElementById("chat-box");
+    const userInput = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-btn");
 
-function addMessage(text, sender) {
-  const msg = document.createElement("div");
-  msg.classList.add("message", sender);
-  msg.innerText = text;
-  chatBox.appendChild(msg);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
+    // Base de conocimientos extraída de los programas de Práctica III
+    const knowledgeBase = [
+        {
+            keywords: ["tecnologia", "secundaria", "it"],
+            response: "En el Profesorado de Tecnologías, la Unidad 1 se enfoca en la construcción de sentido y narrativas de práctica[cite: 3, 4, 5]. Verás temas como integración de TIC y aprendizaje basado en proyectos en la Unidad 2[cite: 20, 21]."
+        },
+        {
+            keywords: ["primaria", "unpa"],
+            response: "Para Educación Primaria (UNPA), el programa aborda la biografía escolar y la identidad docente en la Unidad 1[cite: 35, 39, 43]. También incluye prácticas de ensayo y microclases en la Unidad 2[cite: 50, 51]."
+        },
+        {
+            keywords: ["letras", "uncuyo", "lengua"],
+            response: "En el Profesorado de Letras, la Unidad 1 trata sobre evaluación formativa, autoevaluación y coevaluación[cite: 65, 70, 72, 73]. La Unidad 2 se centra en la investigación e inclusión educativa[cite: 75, 80]."
+        },
+        {
+            keywords: ["evaluacion", "notas", "examen"],
+            response: "La evaluación en Tecnologías incluye un parcial integrador en junio, evaluación de microclases y un coloquio final con defensa de prácticas[cite: 109, 110, 112]. En Letras se utilizan instrumentos de evaluación y rúbricas de acreditación[cite: 69, 71]."
+        },
+        {
+            keywords: ["fechas", "cuando empieza", "termina"],
+            response: "Para el profesorado de Tecnologías, el inicio de actividades es el 18 de marzo y la finalización el 29 de noviembre."
+        }
+    ];
 
-function botResponse(input) {
-  input = input.toLowerCase();
+    function appendMessage(text, sender) {
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("message", sender);
+        msgDiv.innerText = text;
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-  if (input.includes("evaluacion") || input.includes("aprueba")) {
-    return "La materia se aprueba con promedio 7, asistencia y aprobación de todas las instancias (trabajos, prácticas y coloquio).";
-  }
+    function getBotResponse(userText) {
+        const input = userText.toLowerCase();
+        
+        // Buscar coincidencia en la base de conocimientos
+        for (let item of knowledgeBase) {
+            if (item.keywords.some(key => input.includes(key))) {
+                return item.response;
+            }
+        }
+        
+        return "Lo siento, no encontré información específica sobre eso en los programas. Prueba preguntando por una carrera (Tecnologías, Primaria o Letras) o sobre evaluación.";
+    }
 
-  if (input.includes("asistencia")) {
-    return "Necesitás 80% de asistencia a clases y 100% en prácticas.";
-  }
+    function sendMessage() {
+        const text = userInput.value.trim();
+        if (text !== "") {
+            appendMessage(text, "user");
+            userInput.value = "";
+            
+            setTimeout(() => {
+                const response = getBotResponse(text);
+                appendMessage(response, "bot");
+            }, 600);
+        }
+    }
 
-  if (input.includes("practica") || input.includes("escuela")) {
-    return "En las prácticas vas a observar clases, planificar y dar clases reales en escuelas.";
-  }
-
-  if (input.includes("secuencia")) {
-    return "Una secuencia didáctica es un conjunto organizado de actividades con objetivos, recursos y evaluación.";
-  }
-
-  if (input.includes("coloquio") || input.includes("final")) {
-    return "En el coloquio final presentás tu secuencia didáctica y una reflexión sobre tu práctica.";
-  }
-
-  if (input.includes("contenido") || input.includes("unidades")) {
-    return "La materia tiene 3 unidades: perfil docente, el aula y organización de la enseñanza.";
-  }
-
-  if (input.includes("octubre")) {
-    return "En octubre realizás tus prácticas en escuelas asociadas.";
-  }
-
-  return "No entendí tu pregunta. Probá preguntar sobre evaluación, prácticas, asistencia o contenidos.";
-}
-
-function sendMessage() {
-  const input = document.getElementById("userInput");
-  const text = input.value.trim();
-  if (text === "") return;
-
-  addMessage(text, "user");
-
-  setTimeout(() => {
-    const response = botResponse(text);
-    addMessage(response, "bot");
-  }, 500);
-
-  input.value = "";
-}
-
-window.onload = () => {
-  addMessage("Hola 👋 Soy el asistente de Práctica III. ¿En qué te ayudo?", "bot");
-};
+    sendBtn.addEventListener("click", sendMessage);
+    userInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendMessage();
+    });
+});
