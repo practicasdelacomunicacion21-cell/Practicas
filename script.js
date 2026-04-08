@@ -1,62 +1,59 @@
-const chatBox = document.getElementById("chatBox");
-
-function addMessage(text, sender) {
-  const msg = document.createElement("div");
-  msg.classList.add("message", sender);
-  msg.innerText = text;
-  chatBox.appendChild(msg);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-function botResponse(input) {
-  input = input.toLowerCase();
-
-  if (input.includes("evaluacion") || input.includes("aprueba")) {
-    return "La materia se aprueba con promedio 7, asistencia y aprobación de todas las instancias (trabajos, prácticas y coloquio).";
-  }
-
-  if (input.includes("asistencia")) {
-    return "Necesitás 80% de asistencia a clases y 100% en prácticas.";
-  }
-
-  if (input.includes("practica") || input.includes("escuela")) {
-    return "En las prácticas vas a observar clases, planificar y dar clases reales en escuelas.";
-  }
-
-  if (input.includes("secuencia")) {
-    return "Una secuencia didáctica es un conjunto organizado de actividades con objetivos, recursos y evaluación.";
-  }
-
-  if (input.includes("coloquio") || input.includes("final")) {
-    return "En el coloquio final presentás tu secuencia didáctica y una reflexión sobre tu práctica.";
-  }
-
-  if (input.includes("contenido") || input.includes("unidades")) {
-    return "La materia tiene 3 unidades: perfil docente, el aula y organización de la enseñanza.";
-  }
-
-  if (input.includes("octubre")) {
-    return "En octubre realizás tus prácticas en escuelas asociadas.";
-  }
-
-  return "No entendí tu pregunta. Probá preguntar sobre evaluación, prácticas, asistencia o contenidos.";
-}
-
 function sendMessage() {
-  const input = document.getElementById("userInput");
-  const text = input.value.trim();
-  if (text === "") return;
+    let input = document.getElementById("userInput").value;
+    let chatbox = document.getElementById("chatbox");
 
-  addMessage(text, "user");
+    chatbox.innerHTML += `<div class="user">${input}</div>`;
 
-  setTimeout(() => {
-    const response = botResponse(text);
-    addMessage(response, "bot");
-  }, 500);
+    let response = getBotResponse(input.toLowerCase());
 
-  input.value = "";
+    setTimeout(() => {
+        chatbox.innerHTML += `<div class="bot">${response}</div>`;
+        chatbox.scrollTop = chatbox.scrollHeight;
+    }, 500);
+
+    document.getElementById("userInput").value = "";
 }
 
-window.onload = () => {
-  addMessage("Hola 👋 Soy el asistente de Práctica III. ¿En qué te ayudo?", "bot");
-};
+function getBotResponse(input) {
+
+    // 📘 PRÁCTICAS DE LA ENSEÑANZA
+    if (input.includes("prácticas de la enseñanza")) {
+        return "Las prácticas de la enseñanza son complejas y forman parte del campo pedagógico-didáctico. Se estudian para comprender y mejorar la formación docente.";
+    }
+
+    if (input.includes("formación docente")) {
+        return "La formación docente implica la construcción de saberes a partir de la experiencia, la reflexión y el trabajo colaborativo entre docentes y estudiantes.";
+    }
+
+    if (input.includes("escritura")) {
+        return "La escritura tiene un valor fundamental en la formación docente porque permite reflexionar, sistematizar experiencias y construir conocimiento sobre la práctica.";
+    }
+
+    if (input.includes("fases de la enseñanza")) {
+        return "La enseñanza tiene tres fases: preactiva (planificación), interactiva (clase) y posactiva (reflexión sobre lo ocurrido).";
+    }
+
+    // 📘 HUME
+    if (input.includes("hume")) {
+        return "David Hume fue un filósofo de la Ilustración escocesa que estudió cómo funciona la mente humana y los límites del conocimiento.";
+    }
+
+    if (input.includes("conocimiento inductivo")) {
+        return "El conocimiento inductivo va de lo particular a lo general y nunca es definitivo, sino probable y basado en la experiencia.";
+    }
+
+    if (input.includes("percepciones")) {
+        return "Para Hume, las percepciones son los elementos básicos de la mente y se dividen en impresiones (más intensas) e ideas (menos intensas).";
+    }
+
+    if (input.includes("impresiones")) {
+        return "Las impresiones son percepciones intensas como sensaciones, emociones o experiencias directas.";
+    }
+
+    // 📘 RESPUESTA GENERAL
+    if (input.includes("resumen")) {
+        return "Los documentos tratan sobre la formación docente, las prácticas de enseñanza y teorías del conocimiento como la de Hume.";
+    }
+
+    return "No tengo esa información específica, pero podés preguntarme sobre prácticas de enseñanza, formación docente o Hume.";
+}
